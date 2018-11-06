@@ -17,6 +17,7 @@ title: 关于我
 <p>
 
 <h4> 初次 </h4>
+<p>
 接触github，博客还是兄弟帮忙建的。
 <p>
 Let do it~~
