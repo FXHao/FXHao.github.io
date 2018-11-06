@@ -16,22 +16,25 @@ title: 关于我
 
 <p>
 
-初次接触github，博客还是兄弟帮忙建的。
+<h4> 初次 </h4>
+接触github，博客还是兄弟帮忙建的。
+<p>
 Let do it~~
+<p>
 GO!GO!GO!
-
 <p>
 
 <h4> 虽然 </h4>
+<p>
 不是我写的
+<p>
 但也在这分享下搭建博客的教程
 <a href="/2016/10/jekyll_tutorials1/"> Jekyll 搭建个人博客 </a>
 教程
 
 <p> 
 
-博客源码在 <a target="_blank" href='https://github.com/leopardpan/leopardpan.github.io/'>Github</a> 上，你的 Star 是我更新的动力，谢谢~
-
+博客源码在 <a target="_blank" href='https://github.com/leopardpan/leopardpan.github.io/'>Github</a> 上
 <p> 
 
 <p> 
