@@ -397,7 +397,7 @@ img::-moz-selection {
     /*width: 700px;*/
   }
 
-  /*.footer {
+  .footer {
     display: block;
     padding: 2em 0 0 0;
     border-top: 1px solid #DDDDDD;
@@ -414,7 +414,7 @@ img::-moz-selection {
   }
   .footer__copyright a:hover {
     color: #7b0f19; 
-  }*/
+  }
 
   .avatar,
   .logo {
