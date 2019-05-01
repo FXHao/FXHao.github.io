@@ -185,5 +185,3 @@ if __name__ == '__main__':
     main()
 
 ```
-
->[多任务请观看]((https://fxhao.github.io/2019/04/多任务之线程/)))
