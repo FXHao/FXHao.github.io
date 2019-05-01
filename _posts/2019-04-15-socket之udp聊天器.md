@@ -67,7 +67,7 @@ udp_socket.sendto(send_data.encode("gbk"), ("192.168.43.159", 8080))
   3.打印接受数据
 
   ```python
-  print("%s:%s" % recv_data[1], recv_data[0].decode("gbk")))
+  print("%s:%s" % recv_data[1], recv_data[0].decode("gbk"))
   ```
 
   > `recv_data[0]` 之中存储的是接受的数据
@@ -80,7 +80,7 @@ udp_socket.sendto(send_data.encode("gbk"), ("192.168.43.159", 8080))
 udp_socket.close()
 ```
 
-> > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > 
+------
 
 ### udp聊天器
 
@@ -145,3 +145,45 @@ if __name__ == "__main__":
 **socket** 是全双工的通信，但此处只实现了半双工，往后可以改进改进
 
 还有就是此处用到一个软件 **网络调试助手** 可向它收发的数据，看其中的过程
+
+------
+
+### 多任务版UDP聊天器
+
+```python
+import socket
+import threading
+
+def send_msg(udp_socket, dest_ip, dest_port):
+    """发送数据"""
+    while True:
+        send_data = input("输入要输入的数据：")
+        udp_socket.sendto(send_data.encode("gbk"), (dest_ip, dest_port))
+
+def recv_msg(udp_socket):
+    """接受数据"""
+    while True:
+        recv_data = udp_socket.recvfrom(1024)
+        print("%s : %s " % (recv_data[1], recv_data[0].decode("gbk")))
+
+def main():
+    """完成UDP的整体控制"""
+    # 1.创建套接字
+    udp_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    # 2.绑定本地信息
+    udp_socket.bind(("", 7788))
+    # 3.获取对方IP
+    dest_ip = input("请输入对方的IP：")
+    dest_port = int(input("请输入对方的port:"))
+    # 4.创建线程
+    t_recv = threading.Thread(target=recv_msg, args=(udp_socket,))
+    t_recv.start()
+    t_send = threading.Thread(target=send_msg, args= (udp_socket, dest_ip, dest_port))
+    t_send.start()
+
+if __name__ == '__main__':
+    main()
+
+```
+
+>[多任务请观看]([https://fxhao.github.io/2019/04/%E5%A4%9A%E4%BB%BB%E5%8A%A1%E4%B9%8B%E7%BA%BF%E7%A8%8B/](https://fxhao.github.io/2019/04/多任务之线程/))
