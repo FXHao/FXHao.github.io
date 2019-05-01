@@ -186,4 +186,4 @@ if __name__ == '__main__':
 
 ```
 
->[多任务请观看]([https://fxhao.github.io/2019/04/%E5%A4%9A%E4%BB%BB%E5%8A%A1%E4%B9%8B%E7%BA%BF%E7%A8%8B/](https://fxhao.github.io/2019/04/多任务之线程/))
+>[多任务请观看]((https://fxhao.github.io/2019/04/多任务之线程/)))
