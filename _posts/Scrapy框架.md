@@ -1,0 +1,179 @@
+## Scrapy框架
+
+* Scrapy是一个为了爬取网站数据，提取结构性数据而编写的应用框架，我们只需要实现少量的代码，就能够快速的抓取
+
+### scrapy的爬虫流程
+
+![](C:\Users\acer\Documents\GitHub\FXHao.github.io\images\posts\scrapy\流程.jpg)
+
+### scrapy 入门
+
+1. 创建一个爬虫项目——`scrapy starproject mySpider`
+2. 生成一个爬虫—— `scrapy genspider baidu baidu.com` (前面为爬虫名，后面为爬取范围)
+3. 提取数据——完善spider，使用xpath等方法
+4. 保存数据——pipeline中保存数据
+
+### 创建一个爬虫项目
+
+```json
+scrapy startproject +<项目名字>
+scrapy startproject myspider
+```
+
+![](C:\Users\acer\Documents\GitHub\FXHao.github.io\images\posts\scrapy\项目.jpg)
+
+### 生成一个爬虫
+
+```
+scrapy genspider  +<爬虫名字> + <允许爬取的域名>
+scrapy genspider itcast “itcast.cn”
+```
+
+![](C:\Users\acer\Documents\GitHub\FXHao.github.io\images\posts\scrapy\爬虫2.jpg)
+
+### 完善spider
+
+![](C:\Users\acer\Documents\GitHub\FXHao.github.io\images\posts\scrapy\完善spider.jpg)
+
+* 从选择器中提取数据：
+  * `extract()`：返回一个包含字符串数据的列表
+  * `extract_first()`：返回列表中的第一个字符串
+* 注意：
+  * spider中的`parse`方法名**不可以**修改
+  * 需要爬取的url地址必须属于`allow_domain` 下的链接
+  * `response.xpath()` 返回的是一个含有 *selector* 对象的列表
+
+### spider的数据传到pipeline
+
+![](C:\Users\acer\Documents\GitHub\FXHao.github.io\images\posts\scrapy\数据传输.jpg)
+
+* `yield` 可以让整个函数变成一个生成器，每次遍历的时候挨个读到内存中，不会占用太多内存
+
+### pipeline的使用
+
+![](C:\Users\acer\Documents\GitHub\FXHao.github.io\images\posts\scrapy\pipeline.jpg)
+
+* 写完*pipeline*后，还需在*setting*中打开
+
+  ![](C:\Users\acer\Documents\GitHub\FXHao.github.io\images\posts\scrapy\pipeline2.jpg)
+
+### 简单设置LOG
+
+* 为了方便在终端观察，可以在setting中添加一行`LOG_LEVEL = "WARNING”`来设置log显示的级别
+* 普通项目中设置log
+  * `import logging`
+  * `logg.basicConfig(...)` ==>设置日志输出的样式，格式
+  * 实例化一个`logger = logging.getLogger(__name__)`
+  * 在任何py文件中调用logger即可
+
+### 实现翻页请求
+
+* 提取下一页地址
+
+  ```
+  next_url = '....'
+  if next_url != '...'  # 判断是否有下一页
+  	yield scrapy.Request(next_url,callback=self.parse)
+  	# scrapy.Request能构建一个request，同时指定提取数据的callback函数
+  ```
+
+* *url*解码：`urllib.parse` 中的 `unquote`模块
+
+* ```
+  scrapy.Request(url[,callback,method='GET',hedders,body,cookies,meta，dont_filter=False])
+  ```
+
+  > `callback`：指定传入的url交给哪个解析函数去处理
+  >
+  > `meta`：实现不同解析函数中传递数据，默认会携带部分信息
+  >
+  > `dont_filter`：让*scrapy*的去重不会过滤当前*url*，*scrapy*默认有*url*去重
+
+### Item的使用
+
+* 整个类可以理解为一个字典
+
+* 可以定义多字典存不同的数据
+
+* 在把数据交给*pipeline*的时候，可以通过`isintance(item.xxxItem)`,来判断数据是属于哪个item，进行不同的处理
+
+* **item**
+
+  ```python
+  class YangguangItem(scrapy.Item):
+      title = scrapy.Field()
+      href = scrapy.Field()
+      publish_date = scrapy.Field()
+      content_img = scrapy.Field()
+      content = scrapy.Field()
+  ```
+
+* **Spider**
+
+  ```python
+  from yangguang.items import YangguangItem
+  item = YangguangItem() # 实例化一个自定义的item item的操作和字典一样
+  ```
+
+### Scrapy shell
+
+* *scrapy shell* 是一个交互终端，可以调试代码，测试*xpath*表达式
+
+* 进入*shell*：`scrapy shell url`
+
+* 使用：
+
+  | response.url              | 当前响应的url地址                      |
+  | ------------------------- | -------------------------------------- |
+  | response.request.url      | 当前响应对应的请求的url地址            |
+  | response.headers          | 响应头                                 |
+  | response.body             | 响应体，也就是html代码，默认是byte类型 |
+  | response.requests.headers | 当前响应的请求头                       |
+
+* xpath使用：`response.xpath()`
+
+### 注意
+
+* *Scrapy*中是多线程的，所以在传数据时，在不同网页抓取的数据会覆盖之前的数据，这时，在传递保存数据的字典或其它时，可以先将该字典深拷贝下(`deecopy(item)`),这样就不会影响之前的数据结果
+
+### CrawlScrapy
+
+* 可以更为方便的提取*url*地址
+
+* 生成*crwalspider*： `scrapy genspider –t crawl csdn “csdn.cn”`
+
+  相比于生成一个普通的*spider*，就多了 `-t crawl
+
+* ![](C:\Users\acer\Documents\GitHub\FXHao.github.io\images\posts\scrapy\crawlspider.jpg)
+
+  > *LinkExtractor*：连接提取器，提取url地址
+  >
+  > *callback* ：提取出来的*url*交给*callback* 处理，不需处理也可以不指定
+
+### 下载中间件
+
+* 使用方法：
+
+  * 编写一个*Downloader Middlewares*和我们编写一个*pipeline*一样，定义一个类，然后在*setting*中开启
+
+  * *Downloader Middlewares*默认的方法：
+
+    * `process_request(self,request, spider)`：当每个request通过下载中间件时，该方法被调用。
+    * `process_response(self,request, response, spider)`：当下载器完成http请求，传递响应给引擎的时候调用
+
+    ```python
+    class RandomUserAgent(object):
+    	def process_request(self,request,spider):
+          useragent = random.choice(USER_AGENTS)
+          request.headers["User-Agent"] = useragent
+          # ===>添加自定义的UA，给request的headers赋值即可
+    ```
+
+    ```python
+    class ProxyMiddleware(object):
+       def process_request(selfs,request,spider):
+          request.meta["proxy"] = 'http://xxxxxxxx'
+          # ===>添加代理，需要request的meta信息中添加proxy字段
+    ```
+
+    
