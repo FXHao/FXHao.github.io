@@ -1,0 +1,168 @@
+## Airtest入坑
+
+### 简介
+
+> **Airtets** 是网易的 **AirtestProject**项目组推出的。是一款基于**Python**的、跨平台的 **UI** 自动化测试框架。具体的话是利用的是 **图像识别** 的原理。
+>
+> **Poco** 是一款基于**UI控件**识别的自动化测试框架，目前支持Unity3D、Android原生、iOS原生。本质上也是python的第三方库。
+>
+> **AirtestIDE** 顾名思义它是Airtest的代码编辑器，里面内置了**Airtest和Poco**的相关插件，可以帮助我们快速的编写代码。
+
+### 相关文档
+
+* [AirtestProject官方文档](https://airtest.doc.io.netease.com/)
+* [Airtest项目文档](https://airtest.readthedocs.io/zh_CN/latest/README_MORE.html#)
+* [Airtest IDE下载链接](http://airtest.netease.com/)
+* [Poco官方文档](https://poco.readthedocs.io/zh_CN/latest/source/README.html#)
+* [我觉得不错一个的教程](https://testerhome.com/topics/20704)
+
+### Airtest IDE的基础使用
+
+* 这款IDE还是非常友好的，它已经打包好了你使用时需要的全部环境，从官网下载好后就可以直接使用。
+
+  ![1594829650102](D:\Users\Desktop\github\Airtest\1594829650102.png)
+
+#### 连接设备
+
+* 首先是得让需要连接的设备在开发者模式中打开adb调试。
+
+* 当设备连接上时，这里会显示当前电脑所连接的所有设备（模拟器也是可以连接的）
+
+  ![1594830092683](D:\Users\Desktop\github\Airtest\1594830092683.png)
+
+  然后点击**connect**就可以连接上设备，需要**注意**的是手机首次连接时会自动的安装几个软件：
+  
+  * PocoService：这个软件是帮助我们进行UI渲染的，如果发现UI树渲染不出来，首先检查这个软件有没安装，然后就是手机的权限监控
+  * Yosermite：这个软件是与输入法相关的，所以当用完后，发现点击手机的输入框没有弹出输入键盘时，这个时候可以去设置里面把输入法改一下就行了
+
+#### 基本使用
+
+* 首先我们在AirtestIDE里新建一个脚本时，会在代码页里面自动生成以下配置
+
+  ![1594832630644](D:\Users\Desktop\github\Airtest\1594832630644.png)
+
+  * `auto_setup(__file__)`：
+
+    ![image-20200716124701932](D:\Users\Desktop\github\Airtest\image-20200716124701932.png)
+
+    这个这是一个用来初始化环境的接口，可接受4个参数，不传的话会使用默认的配置。
+
+    `__file__`这个可以获取当前文件的路径然后传入。
+
+* **常用的接口**
+
+  ![1594833972492](D:\Users\Desktop\github\Airtest\1594833972492.png)
+
+  * 在Airtest辅助窗中，已经列出了一些的常用的API，点击的时候会自动帮我们生成代码，然后可以在右侧的设备屏幕上截取你需要识别的图像。鼠标放置在相关API上面可以查看该API所接受的参数及意义。
+
+  * 然后还有其他许多的API，这些都是可以查询官方的文档和源码
+
+    ```python
+    dev = device()  # 创建一个设备对象
+    dev.shell()  # 在设备上运行shell命令
+    
+    wake()  # 唤醒设备
+    start_app()  # 启动APP
+    stop_app()  # 停止APP
+    clear_app()  # 清除数据
+    install() # 安装APP
+    uninstall()  # 卸载
+    home()  # 返回主界面
+    ```
+
+ * **图像识别配置**
+
+   ![1594836223677](D:\Users\Desktop\github\Airtest\1594836223677.png)
+
+   * 当我们截取到图像时，可以**双击**代码中的图像，然后就出现上面的配置窗，可以对当前图像的阈值、点击位置等等作出调整。上图中，点击左上角的按钮可以尝试匹配当前屏幕上的图像，若匹配成功，会标记出来。
+   * **threshold**：阈值，这个数据与图像识别精准度关系非常大，在图像的二值化处理中，阈值相当于一个临界值，然后大于这个临界值就转换成白色，反之就转换成黑色。在这里，可以理解为**阈值和图像识别的精确度成正比，但相对应的是识别的成功率也会降低**，这个可以根据实际情况来取设置。
+
+* **全局配置设置**                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             
+
+  * 像上面说的图像的配置设置只是修改点击的那张图片的配置，而在Airtest中有专门的全局配置，我们可以直接修改全局配置来同一修改我们需要的数据。
+
+  * 在`airtest.core.api`接口中有一个 `ST` 变量，它就是全局设置
+
+    ```python
+    from airtest.core.api import *
+    ST.THRESHOLD = 0.7  # 修改阈值[0,1]
+    ST.OPDELAY = 0.1  # 操作之间的间隔时间（s）[0,1]
+    # touch()、wait()、assert_exists()等函数是读取这个配置的
+    FIND_TIMEOUT = 20 # 图片查找超时时间
+    # exists()、assert_not_exists()
+    FIND_TIMEOUT_TMP = 3 
+    # 可以通过设定一个默认项目根目录PROJECT_ROOT，让使用using接口时能够在当前根目录下寻找别的子脚本
+    ST.PROJECT_ROOT = "/User/test/project"
+    ```
+
+
+
+### Poco 基础使用
+
+![image-20200716203531978](D:\Users\Desktop\github\Airtest\image-20200716203531978.png)
+
+* Poco可以检测多种平台的UI控件，但需要事先接入相对应的SDK，Android的话可以直接使用，在选择Android后，在代码编辑框内会自动导入相应模块和初始化（点击‘yes’），Poco辅助窗内会渲染出手机当前界面的控件信息。
+
+  ```python
+  from poco.drivers.android.uiautomation import AndroidUiautomationPoco
+  poco = AndroidUiautomationPoco(use_airtest_input=True, screenshot_each_action=False)
+  ```
+
+#### Poco 基本语法
+
+* **元素定位**
+  * `poco()`：括号里面就是筛选的控件的信息条件
+  * `poco('a').child()` ：获取“ a ”节点下的子节点，多个子节点的话需要用循环提取，否则默认提取第一个子节点，同时`child`里面也可以填写过滤条件
+  * `poco(textMatches='正则')`
+  * `offspring()`：获取孙节点，同样，如果是多个的话需要用for循环提取
+  * `sibling()`：获取当前节点的兄弟节点
+  * `parent()`：获取当前节点的父节点
+* **提取节点属性内容**
+  * `get_text()`：提取文本内容
+  * `poco().attr('xxx')`：获取空间的各个属性，`attr()`内填写需要获取的属性名
+* **等待UI**
+  * `wait()`
+  * `wait_for_all([a,b,c])`：等待多个同时出现
+  * `wait_for_any([a,b,c])`：等待其中一个出现
+  * `exists()`：判断是否存在
+* **控件操作**
+  * `click()`：点击
+  * 
+
+
+
+### 小demo
+
+```python
+def grab_food():
+    '''抢餐'''
+    start_app('com.tencent.mm')
+    poco(text='金科互动娱乐广州大群').wait().click()
+    # 存放送餐人姓名
+    name_list = []
+    # 存储送餐数据
+    msg_list = []
+    while(True):
+        sleep(1) # 隔一秒检测一次
+        # 数据翻转
+        try:
+            with poco.freeze() as poco_freeze:
+                for food in poco_freeze("com.tencent.mm:id/an3").offspring(textMatches='^.*送给你一份美味的餐品啦~'):
+                    msg_list.insert(0, food)
+        except:
+            continue
+        # 读取数据
+        for msg in msg_list:
+            name = msg.get_text().split('送')[0]
+            if name not in name_list:
+                name_list.append(name)
+                msg.click()
+                if poco(text='立即领取').wait(3).exists():
+                    poco(text='立即领取').click()
+                    print('********抢到啦~~********')
+                    poco("com.tencent.mm:id/dn", desc='返回').wait().click()
+                else:
+                    print('********被抢啦~~********')
+                    poco("com.tencent.mm:id/dn", desc='返回').wait().click()
+```
+
